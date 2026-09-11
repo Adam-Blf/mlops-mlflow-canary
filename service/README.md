@@ -46,7 +46,7 @@ pytest tests/
 a real running instance:
 
 ```
-BASE_URL=http://localhost:8000 python tests/check_predict_live.py
+BASE_URL=http://localhost:8001 python tests/check_predict_live.py
 ```
 
 ## Running locally

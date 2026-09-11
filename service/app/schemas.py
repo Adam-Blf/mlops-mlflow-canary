@@ -1,9 +1,10 @@
 """Pydantic v2 schemas for requests and responses.
 
-The feature set below matches what scripts/train.py is expected to train
-on: a small, explicit set of numeric housing features. Keeping the schema
-here, in one place, is what lets /predict validate input before it ever
-reaches the model.
+The feature set below matches scripts/train.py exactly, names AND types.
+The types are not cosmetic: MLflow enforces the model signature at predict
+time and refuses to convert float64 to int64, so declaring bathrooms or
+age_years as float here makes every real prediction fail with a 500 while
+unit tests against a stub model still pass.
 """
 from typing import Literal
 
@@ -13,8 +14,8 @@ from pydantic import BaseModel, Field
 class HouseFeatures(BaseModel):
     square_footage: float = Field(gt=0, description="Living area in square feet")
     bedrooms: int = Field(ge=0, le=20)
-    bathrooms: float = Field(ge=0, le=20)
-    age_years: float = Field(ge=0, le=200)
+    bathrooms: int = Field(ge=0, le=20)
+    age_years: int = Field(ge=0, le=200)
     distance_to_city_km: float = Field(ge=0)
 
 

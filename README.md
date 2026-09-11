@@ -60,7 +60,7 @@ docker compose up -d --build
 ```
 
 - Interface MLflow : http://localhost:5000
-- API : http://localhost:8000, documentation interactive sur http://localhost:8000/docs
+- API : http://localhost:8001 (le port 8000 est pris par un autre projet sur ce poste), documentation interactive sur http://localhost:8001/docs
 
 Puis entraîner un premier modèle depuis le poste de dev :
 
@@ -92,22 +92,22 @@ Exemple de cycle complet :
 
 ```bash
 # état initial, les deux slots portent la version 1
-curl http://localhost:8000/model-status
+curl http://localhost:8001/model-status
 
 # une prédiction
-curl -X POST http://localhost:8000/predict \
+curl -X POST http://localhost:8001/predict \
   -H "Content-Type: application/json" \
   -d '{"features": {"size": 150, "nb_rooms": 3, "garden": 1, "orientation": "Sud"}}'
 
 # on met la version 2 en canary, sans toucher au trafic principal
-curl -X POST http://localhost:8000/update-model \
+curl -X POST http://localhost:8001/update-model \
   -H "Content-Type: application/json" -d '{"version": "2"}'
 
 # on observe la répartition
-curl http://localhost:8000/model-status
+curl http://localhost:8001/model-status
 
 # la version 2 tient la route, on la promeut
-curl -X POST http://localhost:8000/accept-next-model
+curl -X POST http://localhost:8001/accept-next-model
 ```
 
 ## Tests
@@ -151,6 +151,25 @@ docs/reponses.md          réponses écrites aux questions du TP
 | `MLFLOW_TRACKING_URI` | `http://localhost:5000` | adresse du serveur MLflow |
 | `MODEL_NAME` | `house-price-regressor` | nom dans le Model Registry |
 | `CANARY_PROBABILITY_CURRENT` | `0.9` | part du trafic servie par `current` |
+
+## Deux pieges rencontres en montant la pile
+
+**Les artefacts doivent transiter par le serveur MLflow.** Avec un simple
+`--default-artifact-root /mlflow/artifacts`, le client d'entrainement ecrit les
+artefacts a ce chemin sur SA machine, tandis que le service les cherche au meme
+chemin dans SON conteneur. Le modele s'enregistre sans erreur, et le chargement
+echoue plus tard avec un fichier introuvable. Le serveur tourne donc avec
+`--serve-artifacts` et `--artifacts-destination` : les deux cotes passent par
+HTTP et aucun chemin de fichier n'est suppose partage.
+
+**Les types du schema d'API doivent correspondre a la signature du modele.**
+MLflow applique la signature au moment de la prediction et refuse de convertir
+un `float64` en `int64`. Declarer `bathrooms` en `float` alors que
+l'entrainement produit des entiers fait echouer toute prediction reelle avec un
+500, pendant que les tests unitaires restent verts puisqu'ils tournent contre un
+modele bouchon qui accepte tout. `tests/test_schema_matches_training.py`
+compare desormais les noms et les types du schema aux dtypes produits par le
+script d'entrainement.
 
 ## Choix et limites
 
