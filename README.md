@@ -53,6 +53,29 @@ Au démarrage, `current` et `next` portent le même modèle : aucune requête n'
 
 La réponse de `/predict` indique quel slot a servi la prédiction. Sans cette information, un canary est inexploitable : on ne peut pas attribuer une dégradation de métrique à la bonne version.
 
+## Installation
+
+Deux installations coexistent, et c'est voulu.
+
+**Le serveur MLflow tourne en conteneur**, depuis l'image officielle. C'est lui
+qui héberge le tracking, le Model Registry et l'interface web. Rien à installer
+sur le poste pour cela.
+
+**Le client MLflow est installé localement**, dans un environnement virtuel du
+projet, parce que le script d'entraînement s'exécute depuis le poste et doit
+pouvoir parler au serveur.
+
+```bash
+python -m venv .venv
+.venv/Scripts/python -m pip install -r scripts/requirements.txt        # Windows
+# source .venv/bin/activate && pip install -r scripts/requirements.txt # Linux et macOS
+.venv/Scripts/python -m mlflow --version
+```
+
+Versions épinglées et identiques des deux côtés : MLflow 2.17.2, scikit-learn
+1.5.2, pandas 2.2.3. Un client plus récent que le serveur n'est pas garanti
+compatible, c'est le genre d'écart qui se paie à la première requête.
+
 ## Démarrage
 
 ```bash
