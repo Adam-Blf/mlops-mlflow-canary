@@ -143,11 +143,19 @@ pip install -r requirements.txt
 pytest tests -v
 ```
 
-Un script de vérification en conditions réelles est fourni à part, à lancer une fois la pile démarrée :
+Les tests unitaires ne prouvent pas le contrat avec MLflow, puisqu'ils tournent
+contre un bouchon qui accepte tout. Un script de vérification en conditions
+réelles couvre le reste, à lancer une fois la pile démarrée :
 
 ```bash
-python service/tests/check_predict_live.py
+BASE_URL=http://localhost:8001 .venv/Scripts/python service/tests/check_service_live.py
 ```
+
+Il déroule les huit étapes du sujet et sort en erreur à la première qui échoue :
+santé du service, slots identiques au démarrage, prédiction réelle,
+`/update-model` qui ne touche que `next`, répartition effective du trafic sur
+60 requêtes, promotion, prédiction servie par la version promue, et rejet en 422
+d'une entrée dont le type ne correspond pas à la signature du modèle.
 
 ## Structure du dépôt
 

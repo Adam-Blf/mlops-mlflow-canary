@@ -42,11 +42,11 @@ pip install -r requirements.txt
 pytest tests/
 ```
 
-`tests/check_predict_live.py` is a separate manual smoke test that hits
+`tests/check_service_live.py` is a separate manual smoke test that hits
 a real running instance:
 
 ```
-BASE_URL=http://localhost:8001 python tests/check_predict_live.py
+BASE_URL=http://localhost:8001 python tests/check_service_live.py
 ```
 
 ## Running locally
