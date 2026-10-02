@@ -31,6 +31,16 @@ flowchart LR
     end
 
     api --- slots
+
+    classDef c0 fill:#2563eb,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
+    classDef c1 fill:#7c3aed,stroke:#4c1d95,stroke-width:2px,color:#ffffff
+    classDef c2 fill:#0891b2,stroke:#164e63,stroke-width:2px,color:#ffffff
+    class train,client c0
+    class mlflow,api c1
+    class current,next c2
+    style host fill:#2563eb14,stroke:#1e3a8a,stroke-width:1px,stroke-dasharray:4 3
+    style compose fill:#7c3aed14,stroke:#4c1d95,stroke-width:1px,stroke-dasharray:4 3
+    style slots fill:#0891b214,stroke:#164e63,stroke-width:1px,stroke-dasharray:4 3
 ```
 
 Le modèle n'est jamais copié dans l'image Docker. Il est récupéré au démarrage du conteneur depuis le Model Registry MLflow, ce que le sujet demande explicitement.
@@ -47,6 +57,13 @@ flowchart TD
 
     upd["POST /update-model"] -->|charge une version<br/>du registre| nxt
     acc["POST /accept-next-model"] -->|next devient current| cur
+
+    classDef c0 fill:#2563eb,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
+    classDef c1 fill:#7c3aed,stroke:#4c1d95,stroke-width:2px,color:#ffffff
+    classDef c2 fill:#0891b2,stroke:#164e63,stroke-width:2px,color:#ffffff
+    class req,upd,acc c0
+    class tirage,cur,nxt c1
+    class rep c2
 ```
 
 Au démarrage, `current` et `next` portent le même modèle : aucune requête n'est exposée à autre chose que la version validée tant que personne n'a appelé `/update-model`.
