@@ -1,5 +1,14 @@
 # MLOps - versioning de modèles et déploiement canary
 
+<!-- adam-badges:start -->
+[![commits](https://img.shields.io/github/commit-activity/t/Adam-Blf/mlops-mlflow-canary?color=001329&label=commits&style=flat-square)](https://github.com/Adam-Blf/mlops-mlflow-canary/commits)
+[![visites](https://hits.sh/github.com/Adam-Blf/mlops-mlflow-canary.svg?style=flat-square&label=visites&color=001329)](https://hits.sh/github.com/Adam-Blf/mlops-mlflow-canary/)
+[![last commit](https://img.shields.io/github/last-commit/Adam-Blf/mlops-mlflow-canary?color=D4A437&style=flat-square&label=dernier%20push)](https://github.com/Adam-Blf/mlops-mlflow-canary/commits)
+[![top language](https://img.shields.io/github/languages/top/Adam-Blf/mlops-mlflow-canary?style=flat-square)](https://github.com/Adam-Blf/mlops-mlflow-canary)
+[![license](https://img.shields.io/github/license/Adam-Blf/mlops-mlflow-canary?style=flat-square&color=D4A437)](LICENSE)
+[![version](https://img.shields.io/badge/version-0.1.0-D4A437?style=flat-square)](CHANGELOG.md)
+<!-- adam-badges:end -->
+
 Projet du module *Model versioning and canary deployment* (M2 Mastère Data Engineering & IA, EFREI).
 
 Le but est de gérer le cycle de vie d'un modèle avec MLflow, puis de le servir derrière une API qui applique un déploiement canary : deux modèles chargés en mémoire, un trafic réparti entre les deux, et une promotion explicite quand le nouveau modèle fait ses preuves.
